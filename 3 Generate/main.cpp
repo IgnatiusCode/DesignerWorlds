@@ -11,10 +11,14 @@
 
 #include <windows.h>
 #include <MMSystem.h>
+#include <timeapi.h>
 #include <stdio.h>
 #include <conio.h>
 
+#include <algorithm>
+
 #include "valuenoise.h"
+#pragma comment(lib, "winmm.lib")
 
 const int CELLSIZE = 4000; //width of square grid
 const int NUMOCTAVES = 8; //number of octaves of 1/f noise
@@ -23,9 +27,14 @@ const int ALTITUDE = 4000; //altitude scale value
 CDesignerWorld g_cDesignerWorld;
 
 //Height distribution data.
-const int POINTCOUNT = 31;
+/*const int POINTCOUNT = 31;
 int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
+};*/
+
+const int POINTCOUNT = 29;
+int g_nUtahDistribution[POINTCOUNT] = {
+  15, 12, 13, 12, 9, 8, 6, 8, 7, 7, 7, 7, 6, 7, 7, 8, 9, 10, 11, 10, 13, 14, 16, 13, 9, 5, 4, 2, 1
 };
 
 /// Print the header for a DEM file.
