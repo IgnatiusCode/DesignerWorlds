@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <algorithm>
+
 #include "valuenoise.h"
 
 /// Initialize the permutation table.
@@ -85,7 +87,7 @@ float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n){
 /// Get random height value for a single octave at a point in the terrain.
 /// This is Value Noise. If you understand Perlin Noise, then this code will
 /// be hauntingly familiar except for the fact that it uses position instead
-/// of gradient.
+/// of gradient.Z
 /// \param x X coordinate of point at which to sample
 /// \param z Z coordinate of point at which to sample
 /// \return Height value between -1.0 and 1.0
