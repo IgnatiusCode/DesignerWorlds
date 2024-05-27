@@ -16,13 +16,12 @@
 #include <conio.h>
 
 #include <algorithm>
-
+#include "valuenoise.cpp"
 #include "valuenoise.h"
-#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "Winmm.lib")
 
-const int CELLSIZE = 4000; //width of square grid
-const int NUMOCTAVES = 8; //number of octaves of 1/f noise
-const int ALTITUDE = 4000; //altitude scale value
+
+
 
 CDesignerWorld g_cDesignerWorld;
 
@@ -32,9 +31,9 @@ int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
 };*/
 
-const int POINTCOUNT = 29;
+const int POINTCOUNT = 28;
 int g_nUtahDistribution[POINTCOUNT] = {
-  15, 12, 13, 12, 9, 8, 6, 8, 7, 7, 7, 7, 6, 7, 7, 8, 9, 10, 11, 10, 13, 14, 16, 13, 9, 5, 4, 2, 1
+  104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
 };
 
 /// Print the header for a DEM file.
@@ -76,7 +75,7 @@ int main(int argc, char *argv[]){
   for(int i=0; i<CELLSIZE; i++){
     for(int j=0; j<CELLSIZE; j++)
       fprintf(output, "%0.2f ", ALTITUDE *
-        g_cDesignerWorld.GetHeight(x + i/256.0f, z + j/256.0f, 0.5f, 2.0f, NUMOCTAVES));
+        g_cDesignerWorld.GetHeight(x + i/256.0f, z + j/256.0f, 0.5f, 2.0f, NUMOCTAVES, 0.0f, 200.0f));
     fprintf(output, "\n");
     if(i%100 == 0)printf(".");
   } //for

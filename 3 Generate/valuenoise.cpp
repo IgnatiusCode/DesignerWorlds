@@ -17,6 +17,10 @@
 
 #include "valuenoise.h"
 
+const int CELLSIZE = 4000; //width of square grid
+const int NUMOCTAVES = 8; //number of octaves of 1/f noise
+const int ALTITUDE = 4000; //altitude scale value
+
 /// Initialize the permutation table.
 
 void CDesignerWorld::Initialize(){
@@ -71,17 +75,25 @@ void CDesignerWorld::SetValueTable(int table[], const int n){
 /// \param n Number of octaves
 /// \return Height value between 0.0 and 1.0
 
-float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n){
+float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n, float min_height, float max_height){
   float result = 0.0f; //resulting height
   float scale = 1.0f; //scale of next octave
   
   for(int i=0; i<n; i++){ //for each octave 
-    result += scale * noise(x, z);
+    float norm_noise = (1.0f + noise(x,z))/2.0f;
+    result += scale * norm_noise;
+    //result += scale * noise(x, z);
     scale *= a; //scale down amplitude of next octave
     x *= b; z *= b; //scale down wavelength of next octave
   } //for
+  //printf("%f      ",a);
+  //printf("%f",result);
+  float normalizedResult = (result * 1.414213f * (a - 1.0f) / (scale - 1.0f));
+  float height = min_height + normalizedResult * (max_height - min_height);
+  //float height = (1.0f + result * 1.414213f * (a - 1.0f)/(scale - 1.0f))/2.0f;
+  //printf("%f", normalizedResult);
 
-  return (1.0f + result * 1.414213f * (a - 1.0f)/(scale - 1.0f))/2.0f; //scale to [0.0, 1.0]
+  return height/ALTITUDE; //scale to [0.0, 1.0]
 } //GetHeight
 
 /// Get random height value for a single octave at a point in the terrain.

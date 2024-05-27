@@ -32,6 +32,6 @@ class CDesignerWorld{
 
   public:
     void Initialize(); ///< Initialize.
-    float GetHeight(float x, float z, float a, float b, int n); ///< Get height.
+    float GetHeight(float x, float z, float a, float b, int n, float min_height, float max_height); ///< Get height.
     void SetValueTable(int table[], const int n); //< Set value table.
 }; //CDesignerWorld
