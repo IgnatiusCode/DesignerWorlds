@@ -14,6 +14,8 @@
 #include <timeapi.h>
 #include <stdio.h>
 #include <conio.h>
+#include <vector>
+
 
 #include <algorithm>
 #include "valuenoise.cpp"
@@ -21,20 +23,27 @@
 #pragma comment(lib, "Winmm.lib")
 
 
-
+const int CELLSIZE = 4000; //width of square grid
+const int NUMOCTAVES = 8; //number of octaves of 1/f noise
+const int ALTITUDE = 4000; //altitude scale value
 
 CDesignerWorld g_cDesignerWorld;
+typedef std::vector<std::vector<float>> HeightMatrix;
 
 //Height distribution data.
-/*const int POINTCOUNT = 31;
+const int POINTCOUNT = 31;
 int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
-};*/
+};
 
-const int POINTCOUNT = 28;
+/*const int POINTCOUNT = 28;
 int g_nUtahDistribution[POINTCOUNT] = {
   104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
-};
+};*/
+
+const float min_elevation = 0.0f;
+const float max_elevation = 500.0f;
+const bool scaled = true;
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
@@ -59,6 +68,7 @@ int main(int argc, char *argv[]){
   //set up designer world
   g_cDesignerWorld.Initialize();
   g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+  HeightMatrix heights(CELLSIZE, std::vector<float>(CELLSIZE, 0.0f));
 
   //start the DEM file
   char filename[MAX_PATH];
@@ -71,11 +81,37 @@ int main(int argc, char *argv[]){
   float x = (float)rand();
   float z = (float)rand();
 
+  float max_height = -std::numeric_limits<float>::infinity();
+  float min_height = std::numeric_limits<float>::infinity();
+
+  for(int i=0; i<CELLSIZE; i++){
+    for(int j=0; j<CELLSIZE; j++) {
+      float height = g_cDesignerWorld.GetHeight(x + i/256.0f, z + j/256.0f, 0.5f, 2.0f, NUMOCTAVES);
+      heights[i][j] = height;
+      if (height>max_height) {
+        max_height = height;
+      }
+      if (height<min_height) {
+        min_height = height;
+      }
+    }
+  }
+  
+  //normalise heights
+  if (scaled) {
+    for(int i=0; i<CELLSIZE; i++){
+    for(int j=0; j<CELLSIZE; j++) {
+      heights[i][j] = ((heights[i][j] - min_height) / (max_height - min_height)) * (max_elevation - min_elevation) + min_elevation;
+
+    }
+  }
+  }
+
   //generate and save grid heights to DEM file
   for(int i=0; i<CELLSIZE; i++){
     for(int j=0; j<CELLSIZE; j++)
-      fprintf(output, "%0.2f ", ALTITUDE *
-        g_cDesignerWorld.GetHeight(x + i/256.0f, z + j/256.0f, 0.5f, 2.0f, NUMOCTAVES, 0.0f, 200.0f));
+      fprintf(output, "%0.2f ",
+        heights[i][j]);
     fprintf(output, "\n");
     if(i%100 == 0)printf(".");
   } //for
