@@ -6,23 +6,23 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
 
+
 from landlab import RasterModelGrid
 from landlab.plot.imshow import imshow_grid
 
+types = ['valley', 'fluvial', 'sediment']
+
 filename = '53526812.asc'  # Replace with your file path
-elevation_large, cellsize = load_dem.load_asc_file(filename)
-print(elevation_large.shape)
-elevation = elevation_large[:5000, :5000]
-print(elevation.shape)
+elevation, cellsize = load_dem.load_asc_file(filename)
 nrows, ncols = elevation.shape
 
 
 mg = RasterModelGrid((nrows, ncols), cellsize)
 z = mg.add_field('topographic__elevation', elevation.flatten(), at='node')
 #plt.plot(mg.x_of_node, mg.y_of_node, '.')
-D = 0.1  # m2/yr transport coefficient
+D = 1  # m2/yr transport coefficient
 dt = 0.2 * mg.dx * mg.dx / D
-mg.set_closed_boundaries_at_grid_edges(True, True, True, False)
+mg.set_closed_boundaries_at_grid_edges(True, False, True, False)
 qs = mg.add_zeros('sediment_flux', at='link')
 
 
