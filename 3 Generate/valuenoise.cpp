@@ -14,9 +14,12 @@
 
 #include "valuenoise.h"
 
-const int CELLSIZE = 4000; // width of square grid
-const int NUMOCTAVES = 8;  // number of octaves of 1/f noise
-const int ALTITUDE = 4000; // altitude scale value
+// const int CELLSIZE = 4000; // width of square grid
+// const int NUMOCTAVES = 8;  // number of octaves of 1/f noise
+// const int ALTITUDE = 4000; // altitude scale value
+const int CELLSIZE = 512; //width of square grid
+const int NUMOCTAVES = 8; //number of octaves of 1/f noise
+const int ALTITUDE = 512; //altitude scale value
 
 /// Initialize the permutation table.
 

@@ -16,6 +16,8 @@
 #include <conio.h>
 #include <vector>
 #include <limits>
+#include <ctime>
+#include <math.h>
 
 #include <algorithm>
 #include "valuenoise.cpp"
@@ -98,8 +100,16 @@ int main(int argc, char *argv[])
     {
       // float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
+      // Seed the random number generator
+      srand(time(nullptr));
+      // Generate a random float around 10
+      float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
+    
       float height = g_sDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
-      heights[i][j] = height;
+
+      // increase the height to a random times (about 40)
+      heights[i][j] = height * abs(randomNumber);
+      // printf("%f/", pow(height, rn));
       if (height > max_height)
       {
         max_height = height;
