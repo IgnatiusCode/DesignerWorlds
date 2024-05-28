@@ -23,14 +23,17 @@
 #pragma comment(lib, "Winmm.lib")
 
 
-const int CELLSIZE = 4000; //width of square grid
+const int CELLSIZE = 512; //width of square grid
 const int NUMOCTAVES = 8; //number of octaves of 1/f noise
-const int ALTITUDE = 4000; //altitude scale value
+const int ALTITUDE = 512; //altitude scale value
 
 CDesignerWorld g_cDesignerWorld;
 typedef std::vector<std::vector<float>> HeightMatrix;
 
 //Height distribution data.
+const float min_elevation = 0.0f;
+const float max_elevation = 500.0f;
+const bool scaled = true;
 const int POINTCOUNT = 31;
 int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
@@ -40,10 +43,6 @@ int g_nUtahDistribution[POINTCOUNT] = {
 int g_nUtahDistribution[POINTCOUNT] = {
   104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
 };*/
-
-const float min_elevation = 0.0f;
-const float max_elevation = 500.0f;
-const bool scaled = true;
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
