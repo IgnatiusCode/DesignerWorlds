@@ -78,10 +78,13 @@ float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n){
 
   
   for(int i=0; i<n; i++){ //for each octave 
+    float n = noise(x,z);
     result += scale * noise(x, z);
     scale *= a; //scale down amplitude of next octave
     x *= b; z *= b; //scale down wavelength of next octave
   } //for
+  float height = (1.0f + result * 1.414213f * (a - 1.0f)/(scale - 1.0f))/2.0f;
+  //printf("%f",height);
 
   return (1.0f + result * 1.414213f * (a - 1.0f)/(scale - 1.0f))/2.0f; //scale to [0.0, 1.0]
 } //GetHeight

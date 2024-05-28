@@ -33,16 +33,16 @@ typedef std::vector<std::vector<float>> HeightMatrix;
 //Height distribution data.
 const float min_elevation = 0.0f;
 const float max_elevation = 500.0f;
-const bool scaled = true;
-const int POINTCOUNT = 31;
-int g_nUtahDistribution[POINTCOUNT] = {
+const bool scaled = false;
+//const int POINTCOUNT = 31;
+/*int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
-};
+};*/
 
-/*const int POINTCOUNT = 28;
+const int POINTCOUNT = 28;
 int g_nUtahDistribution[POINTCOUNT] = {
   104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
-};*/
+};
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
   for(int i=0; i<CELLSIZE; i++){
     for(int j=0; j<CELLSIZE; j++)
       fprintf(output, "%0.2f ",
-        heights[i][j]);
+        heights[i][j]*ALTITUDE);
     fprintf(output, "\n");
     if(i%100 == 0)printf(".");
   } //for
