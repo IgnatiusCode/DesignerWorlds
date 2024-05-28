@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
   // g_cDesignerWorld.Initialize();
   // g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
 
-  g_sDesignerWorld.Initialize();
-  g_sDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+  g_cDesignerWorld.Initialize();
+  g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
   HeightMatrix heights(CELLSIZE, std::vector<float>(CELLSIZE, 0.0f));
 
   // start the DEM file
@@ -104,12 +104,12 @@ int main(int argc, char *argv[])
       // Seed the random number generator
       srand(time(nullptr));
       // Generate a random float around 10
-      float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
+      //float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
     
-      float height = g_sDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+      float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
       // increase the height to a random times (about 40)
-      heights[i][j] = height * abs(randomNumber);
+      heights[i][j] = height;
       // printf("%f/", pow(height, rn));
       if (height > max_height)
       {
