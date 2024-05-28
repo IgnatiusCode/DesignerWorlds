@@ -99,16 +99,16 @@ float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n)
   for (int i = 0; i < n; i++)
   // while(n > 0)
   { // for each octave
-    result += scale * simplexNoise.noise(x, z);
-    scale *= a; // scale down amplitude of next octave
+    result += scale * simplexNoise.noise(x * a, z * a);
+    // scale *= a; // scale down amplitude of next octave
     sum_scales += scale;
-    x *= b;
-    z *= b; // scale down wavelength of next octave
+    a *= b;
+    a *= b; // scale down wavelength of next octave
   } // for
 
   result = pow(result / sum_scales, 1.9f);
   return (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) * 2.0f;
-  
+
   // return pow(result, 1.95f) * 2;
   // printf("%f      ",a);
   // printf("%f",result);
