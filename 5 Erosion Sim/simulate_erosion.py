@@ -12,7 +12,7 @@ from landlab.plot.imshow import imshow_grid
 
 types = ['valley', 'fluvial', 'sediment']
 
-filename = '53526812.asc'  # Replace with your file path
+filename = r'C:\Users\YYY\Documents\UNI\FourthYear\COMP4610\FinalMajor\DesignerWorlds\5 Erosion Sim\959205781.asc'  # Replace with your file path
 elevation, cellsize = load_dem.load_asc_file(filename)
 nrows, ncols = elevation.shape
 
@@ -20,8 +20,8 @@ nrows, ncols = elevation.shape
 mg = RasterModelGrid((nrows, ncols), cellsize)
 z = mg.add_field('topographic__elevation', elevation.flatten(), at='node')
 #plt.plot(mg.x_of_node, mg.y_of_node, '.')
-D = 1  # m2/yr transport coefficient
-dt = 0.2 * mg.dx * mg.dx / D
+D = 10  # m2/yr transport coefficient
+dt = 0.5 * mg.dx * mg.dx / D
 mg.set_closed_boundaries_at_grid_edges(True, False, True, False)
 qs = mg.add_zeros('sediment_flux', at='link')
 
@@ -36,7 +36,7 @@ imshow_grid(mg, 'topographic__elevation')
 axes[0].set_title('Initial Elevation')
 #imshow_grid(mg, 'topographic__elevation')
 plt.show()
-for i in range(16):
+for i in range(10):
     print('step '+ str(i))
     g = mg.calc_grad_at_link(z)
     qs[mg.active_links] = -D * g[mg.active_links]

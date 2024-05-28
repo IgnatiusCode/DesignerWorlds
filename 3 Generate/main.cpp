@@ -1,13 +1,13 @@
 /// \file main.cpp
 
-//Copyright Ian Parberry, November 2013.
+// Copyright Ian Parberry, November 2013.
 //
-//This file is made available under the GNU All-Permissive License.
+// This file is made available under the GNU All-Permissive License.
 //
-//Copying and distribution of this file, with or without
-//modification, are permitted in any medium without royalty
-//provided the copyright notice and this notice are preserved.
-//This file is offered as-is, without any warranty.
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are preserved.
+// This file is offered as-is, without any warranty.
 
 #include <windows.h>
 #include <MMSystem.h>
@@ -15,22 +15,28 @@
 #include <stdio.h>
 #include <conio.h>
 #include <vector>
-
+#include <limits>
+#include <ctime>
+#include <math.h>
 
 #include <algorithm>
 #include "valuenoise.cpp"
 #include "valuenoise.h"
+
+#include "Simplex.cpp"
+#include "Simplex.h"
 #pragma comment(lib, "Winmm.lib")
 
-
-const int CELLSIZE = 512; //width of square grid
-const int NUMOCTAVES = 8; //number of octaves of 1/f noise
-const int ALTITUDE = 512; //altitude scale value
+// const int CELLSIZE = 512; //width of square grid
+// const int NUMOCTAVES = 8; //number of octaves of 1/f noise
+// const int ALTITUDE = 512; //altitude scale value
 
 CDesignerWorld g_cDesignerWorld;
+// simplex noise
+SDesignerWorld g_sDesignerWorld;
 typedef std::vector<std::vector<float>> HeightMatrix;
 
-//Height distribution data.
+// Height distribution data.
 const float min_elevation = 0.0f;
 const float max_elevation = 500.0f;
 const bool scaled = false;
@@ -47,8 +53,10 @@ int g_nUtahDistribution[POINTCOUNT] = {
 /// Print the header for a DEM file.
 /// \param output Output file handle.
 
-void printDEMfileHeader(FILE* output){
-  if(output == NULL)return; //bail and fail
+void printDEMfileHeader(FILE *output)
+{
+  if (output == NULL)
+    return; // bail and fail
 
   fprintf(output, "nrows %d\n", CELLSIZE);
   fprintf(output, "ncols %d\n", CELLSIZE);
@@ -56,70 +64,92 @@ void printDEMfileHeader(FILE* output){
   fprintf(output, "yllcenter %0.6f\n", 0.0f);
   fprintf(output, "cellsize 5.000000\n");
   fprintf(output, "NODATA_value  -9999\n");
-} //printDEMfileHeader
+} // printDEMfileHeader
 
-int main(int argc, char *argv[]){ 
-  //initialize the random number generator
+int main(int argc, char *argv[])
+{
+  // initialize the random number generator
   int seed = timeGetTime();
   srand(seed);
   printf("Pseudorandom number seed = %d\n", seed);
 
-  //set up designer world
-  g_cDesignerWorld.Initialize();
-  g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+  // set up designer world
+  // g_cDesignerWorld.Initialize();
+  // g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+
+  g_sDesignerWorld.Initialize();
+  g_sDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
   HeightMatrix heights(CELLSIZE, std::vector<float>(CELLSIZE, 0.0f));
 
-  //start the DEM file
+  // start the DEM file
   char filename[MAX_PATH];
   sprintf_s(filename, "%d.asc", seed);
-  FILE* output;
+  FILE *output;
   fopen_s(&output, filename, "wt");
   printDEMfileHeader(output);
 
-  //get random origin
+  // get random origin
   float x = (float)rand();
   float z = (float)rand();
 
   float max_height = -std::numeric_limits<float>::infinity();
   float min_height = std::numeric_limits<float>::infinity();
 
-  for(int i=0; i<CELLSIZE; i++){
-    for(int j=0; j<CELLSIZE; j++) {
-      float height = g_cDesignerWorld.GetHeight(x + i/256.0f, z + j/256.0f, 0.5f, 2.0f, NUMOCTAVES);
-      heights[i][j] = height;
-      if (height>max_height) {
+  for (int i = 0; i < CELLSIZE; i++)
+  {
+    for (int j = 0; j < CELLSIZE; j++)
+    {
+      // float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+
+      // Seed the random number generator
+      srand(time(nullptr));
+      // Generate a random float around 10
+      float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
+    
+      float height = g_sDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+
+      // increase the height to a random times (about 40)
+      heights[i][j] = height * abs(randomNumber);
+      // printf("%f/", pow(height, rn));
+      if (height > max_height)
+      {
         max_height = height;
       }
-      if (height<min_height) {
+      if (height < min_height)
+      {
         min_height = height;
       }
     }
   }
-  
-  //normalise heights
-  if (scaled) {
-    for(int i=0; i<CELLSIZE; i++){
-    for(int j=0; j<CELLSIZE; j++) {
-      heights[i][j] = ((heights[i][j] - min_height) / (max_height - min_height)) * (max_elevation - min_elevation) + min_elevation;
 
+  // normalise heights
+  if (scaled)
+  {
+    for (int i = 0; i < CELLSIZE; i++)
+    {
+      for (int j = 0; j < CELLSIZE; j++)
+      {
+        heights[i][j] = ((heights[i][j] - min_height) / (max_height - min_height)) * (max_elevation - min_elevation) + min_elevation;
+      }
     }
   }
-  }
 
-  //generate and save grid heights to DEM file
-  for(int i=0; i<CELLSIZE; i++){
-    for(int j=0; j<CELLSIZE; j++)
+  // generate and save grid heights to DEM file
+  for (int i = 0; i < CELLSIZE; i++)
+  {
+    for (int j = 0; j < CELLSIZE; j++)
       fprintf(output, "%0.2f ",
         heights[i][j]*ALTITUDE);
     fprintf(output, "\n");
-    if(i%100 == 0)printf(".");
-  } //for
+    if (i % 100 == 0)
+      printf(".");
+  } // for
 
-  //shut down and exit
+  // shut down and exit
   printf("\n");
   fclose(output);
 
   printf("Hit Almost Any Key to Exit...\n");
   _getch();
   return 0;
-} //main
+} // main
