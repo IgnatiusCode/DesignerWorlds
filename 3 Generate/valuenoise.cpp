@@ -1,6 +1,5 @@
 /// \file valuenoise.cpp
 /// \brief Code for the designer world class CDesignerWorld.
-
 // Copyright Ian Parberry, November 2013.
 //
 // This file is made available under the GNU All-Permissive License.
@@ -9,26 +8,15 @@
 // modification, are permitted in any medium without royalty
 // provided the copyright notice and this notice are preserved.
 // This file is offered as-is, without any warranty.
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <algorithm>
-#include <math.h>
 
 #include "valuenoise.h"
-#include "SimplexNoise.cpp"
-SimplexNoise simplexNoise;
 
-#include "PerlinNoise.hpp"
-
-const siv::PerlinNoise::seed_type seed = 123456u;
-const siv::PerlinNoise perlin{seed};
-
-// const int CELLSIZE = 4000; // width of square grid
-// const int NUMOCTAVES = 8;  // number of octaves of 1/f noise
-// const int ALTITUDE = 4000; // altitude scale value
-
-// SimplexNoise simplexNoise;
+const int CELLSIZE = 4000; // width of square grid
+const int NUMOCTAVES = 8;  // number of octaves of 1/f noise
+const int ALTITUDE = 4000; // altitude scale value
 
 /// Initialize the permutation table.
 
@@ -37,7 +25,6 @@ void CDesignerWorld::Initialize()
   // start with identity permutation
   for (int i = 0; i < SIZE; i++)
     m_nPermute[i] = i;
-
   // randomize
   for (int i = SIZE - 1; i > 0; i--)
   {
@@ -51,7 +38,6 @@ void CDesignerWorld::Initialize()
 /// Set the value table.
 /// \param table Table of values.
 /// \param n Size of table.
-
 void CDesignerWorld::SetValueTable(int table[], const int n)
 {
   // check that the values add up to 256
@@ -63,7 +49,6 @@ void CDesignerWorld::SetValueTable(int table[], const int n)
     printf("Height distribution values must sum to %d, not %d\n", SIZE, sum);
     return; // fail and bail
   } // if
-
   // fill the table
   float delta = 2.0f / (float)(n - 1); // interval size
   float min = -1.0f;                   // lower limit if interval
@@ -74,7 +59,6 @@ void CDesignerWorld::SetValueTable(int table[], const int n)
       m_fPosition[k++] = min + delta * (float)rand() / (float)RAND_MAX;
     min += delta;
   } // for
-
   // missed the largest values, get them now
   for (int j = 0; j < table[n - 1]; j++)
     m_fPosition[k++] = 1.0f;
@@ -91,34 +75,31 @@ void CDesignerWorld::SetValueTable(int table[], const int n)
 
 float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n)
 {
+  // float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n)
+  // {
   float result = 0.0f; // resulting height
   float scale = 1.0f;  // scale of next octave
-  float sum_scales = 1.0f;
-  float decrese_unit = scale / n;
 
   for (int i = 0; i < n; i++)
-  // while(n > 0)
   { // for each octave
-    result += scale * simplexNoise.noise(x * a, z * a);
-    // scale *= a; // scale down amplitude of next octave
-    sum_scales += scale;
-    a *= b;
-    a *= b; // scale down wavelength of next octave
+    result += scale * noise(x, z);
+    float norm_noise = (1.0f + noise(x, z)) / 2.0f;
+    result += scale * norm_noise;
+    // result += scale * noise(x, z);
+    scale *= a; // scale down amplitude of next octave
+    x *= b;
+    z *= b; // scale down wavelength of next octave
   } // for
 
-  result = pow(result / sum_scales, 1.9f);
-  return (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) * 2.0f;
-
-  // return pow(result, 1.95f) * 2;
+  // return (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) / 2.0f; // scale to [0.0, 1.0]
   // printf("%f      ",a);
   // printf("%f",result);
-  // float normalizedResult = (result * 1.414213f * (a - 1.0f) / (scale - 1.0f));
-  // // float height = min_height + normalizedResult * (max_height - min_height);
-  // float height = (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) * 2.0f;
-  // // printf("%f", normalizedResult);
+  float normalizedResult = (result * 1.414213f * (a - 1.0f) / (scale - 1.0f));
+  // float height = min_height + normalizedResult * (max_height - min_height);
+  float height = (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) / 2.0f;
+  // printf("%f", normalizedResult);
 
-  // return height;
-  // return height / ALTITUDE; // scale to [0.0, 1.0]
+  return height / ALTITUDE; // scale to [0.0, 1.0]
 } // GetHeight
 
 /// Get random height value for a single octave at a point in the terrain.
@@ -134,17 +115,13 @@ float CDesignerWorld::noise(float x, float z)
   const float sx = s_curve(x - dx);
   const int i = m_nPermute[MASK & dx];
   const int j = m_nPermute[MASK & (dx + 1)];
-
   const int dz = (int)z;
   const float sz = s_curve(z - dz);
-
   float u0 = m_fPosition[m_nPermute[(i + dz) & MASK]];
   float u1 = m_fPosition[m_nPermute[(j + dz) & MASK]];
   const float v0 = lerp(sx, u0, u1);
   u0 = m_fPosition[m_nPermute[(i + dz + 1) & MASK]];
   u1 = m_fPosition[m_nPermute[(j + dz + 1) & MASK]];
   const float v1 = lerp(sx, u0, u1);
-
   return lerp(sz, v0, v1);
-
 } // noise
