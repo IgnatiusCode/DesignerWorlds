@@ -11,7 +11,7 @@ import scipy.spatial
 import skimage.measure
 import sys
 import util
-import load_dem
+
 
 # Returns the index of the smallest value of `a`
 def min_index(a): return a.index(min(a))
@@ -182,11 +182,6 @@ def main(argv):
   default_water_level = 1.0
   evaporation_rate = 0.2
 
-  # # load asc file and get matrix
-  # matrix, _ = load_dem.load_asc_file("105705609.asc")
-  # # change to loaded shape
-  # shape = matrix.shape
-
   print ('Generating...')
 
   print('  ...initial terrain shape')
@@ -224,8 +219,6 @@ def main(argv):
       points, neighbors, points_deltas, volume, upstream, 
       max_delta, river_downcutting_constant)
   terrain_height = render_triangulation(shape, tri, new_height)
-
-
 
   np.savez('river_network', height=terrain_height, land_mask=land_mask)
 
