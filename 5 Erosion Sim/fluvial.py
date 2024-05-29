@@ -182,6 +182,11 @@ def main(argv):
   default_water_level = 1.0
   evaporation_rate = 0.2
 
+  # # load asc file and get matrix
+  # matrix, _ = load_dem.load_asc_file("105705609.asc")
+  # # change to loaded shape
+  # shape = matrix.shape
+
   print ('Generating...')
 
   print('  ...initial terrain shape')
