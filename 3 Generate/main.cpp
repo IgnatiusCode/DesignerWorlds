@@ -54,10 +54,10 @@ const bool scaled = true;
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
 };*/
 
- const int POINTCOUNT = 32;
- int g_nUtahDistribution[POINTCOUNT] = {
-   6, 8, 9, 2, 10, 6, 12, 0, 8, 10, 11, 11, 8, 10, 7, 11, 9, 5, 7, 11, 12, 9, 1, 6, 8, 8, 9, 7, 8, 5, 10, 12
- };
+const int POINTCOUNT = 32;
+int g_nUtahDistribution[POINTCOUNT] = {
+  90, 18, 12, 13, 12, 6, 11, 9, 5, 2, 3, 5, 3, 3, 0, 1, 3, 5, 1, 1, 4, 4, 4, 4, 0, 2, 2, 3, 7, 3, 4, 16
+};
 
 // const int POINTCOUNT = 31;
 // int g_nUtahDistribution[POINTCOUNT] = {

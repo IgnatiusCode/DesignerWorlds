@@ -30,6 +30,8 @@ def normalize_distribution(hist, total_points):
             hist[idx] -= 1
     return hist
 
+
+# for debugging and checking stuff
 def plot_distribution(distribution, title):
     plt.bar(range(len(distribution)), distribution)
     plt.title(title)
@@ -65,7 +67,9 @@ plateaus_distribution = generate_terrain_distribution(
 
 # Archipelago Distribution: Multiple low values, some high peaks (more intermediate ones than island)
 archipelago_distribution = generate_terrain_distribution(
-    num_bins=32, total_points=256, loc1=10, scale1=5, ratio1=0.6, loc2=25, scale2=10, ratio2=0.4)
+    num_bins=32, total_points=256, loc1=5, scale1=5, ratio1=0.6, loc2=25, scale2=10, ratio2=0.4)
+
+
 
 # Plot the distributions
 plot_distribution(island_distribution, "Island Distribution")
