@@ -45,10 +45,15 @@ const bool scaled = false;
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
 };*/
 
-const int POINTCOUNT = 28;
-int g_nUtahDistribution[POINTCOUNT] = {
-  104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
-};
+ const int POINTCOUNT = 32;
+ int g_nUtahDistribution[POINTCOUNT] = {
+   6, 8, 9, 2, 10, 6, 12, 0, 8, 10, 11, 11, 8, 10, 7, 11, 9, 5, 7, 11, 12, 9, 1, 6, 8, 8, 9, 7, 8, 5, 10, 12
+ };
+
+// const int POINTCOUNT = 31;
+// int g_nUtahDistribution[POINTCOUNT] = {
+//   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
+// };
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
