@@ -53,7 +53,7 @@ def generate_data(num_modes, centres, spreads, skews, kurtoses, weights=None, n_
         combined_data[0] += 1
     
     while sum(combined_data) > 256:
-        for i in range (0, combined_data.size()):
+        for i in range (0, n_samples):
             if combined_data[i] > 0:
                 combined_data[i] -= 1
                 break
