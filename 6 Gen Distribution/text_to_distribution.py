@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 #import generate_distrubtion
 from enum import Enum
 
@@ -91,6 +92,8 @@ class Params:
         }
         return erosion_params.get(self.terrain)
 
+
+# Obsolete function? 
 def apply_erosion(terrain: Terrain, height_grid):
     return height_grid
 
@@ -117,12 +120,14 @@ def write_distribution_to_file(filename, terrain_type, distribution, noise_param
         # file.write(f'  Sediment Erosion: {erosion_params[1]}\n')
         # file.write(f'  Fluvial Erosion: {erosion_params[2]}\n')
         # file.write(f'  Plateau: {erosion_params[3]}\n')
+        
         file.write('\n\n')
 
 # Example usage
 if __name__ == "__main__":
     terrains = [Terrain.PLAINS, Terrain.HILLY, Terrain.SMOOTH_MOUNTAIN, Terrain.JAG_MOUNTAIN, Terrain.ISLANDS, Terrain.PLATEUS, Terrain.ARCHIPELAGO]
-    output_file = 'terrain_distributions.txt'
+    current_dir = os.path.dirname(__file__)
+    output_file = os.path.join(current_dir, 'terrain_distributions.txt')
     open(output_file, 'w').close()
 
     for terrain in terrains:
