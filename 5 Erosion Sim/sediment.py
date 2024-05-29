@@ -5,13 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.colors as mcolors
 
-
-
 from landlab import RasterModelGrid
 from landlab.plot.imshow import imshow_grid
 
 types = ['valley', 'fluvial', 'sediment']
 valley = False
+
 
 filename = '53526812.asc'  # Replace with your file path
 elevation, cellsize = load_dem.load_asc_file(filename)

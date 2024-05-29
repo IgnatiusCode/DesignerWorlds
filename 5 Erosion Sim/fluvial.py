@@ -11,7 +11,7 @@ import scipy.spatial
 import skimage.measure
 import sys
 import util
-
+import load_dem
 
 # Returns the index of the smallest value of `a`
 def min_index(a): return a.index(min(a))
@@ -219,6 +219,8 @@ def main(argv):
       points, neighbors, points_deltas, volume, upstream, 
       max_delta, river_downcutting_constant)
   terrain_height = render_triangulation(shape, tri, new_height)
+
+
 
   np.savez('river_network', height=terrain_height, land_mask=land_mask)
 
