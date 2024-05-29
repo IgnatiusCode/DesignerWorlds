@@ -20,20 +20,29 @@
 #include <math.h>
 
 #include <algorithm>
+// value noise
 #include "valuenoise.cpp"
 #include "valuenoise.h"
 
+// simplex noise
 #include "Simplex.cpp"
 #include "Simplex.h"
+
+// perlin noise
+#include "Perlin.cpp"
+#include "Perlin.h"
 #pragma comment(lib, "Winmm.lib")
 
 // const int CELLSIZE = 512; //width of square grid
 // const int NUMOCTAVES = 8; //number of octaves of 1/f noise
 // const int ALTITUDE = 512; //altitude scale value
 
+// for value noise
 CDesignerWorld g_cDesignerWorld;
-// simplex noise
+// for simplex noise
 SDesignerWorld g_sDesignerWorld;
+// for perlin noise
+PDesignerWorld g_pDesignerWorld;
 typedef std::vector<std::vector<float>> HeightMatrix;
 
 // Height distribution data.
@@ -79,11 +88,18 @@ int main(int argc, char *argv[])
   printf("Pseudorandom number seed = %d\n", seed);
 
   // set up designer world
-  // g_cDesignerWorld.Initialize();
-  // g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+  // // if use simplex noise
+  // g_sDesignerWorld.Initialize();
+  // g_sDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
 
+  // if use value noise
   g_cDesignerWorld.Initialize();
   g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+
+  // // if use perlin noiser
+  // g_pDesignerWorld.Initialize();
+  // g_pDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+
   HeightMatrix heights(CELLSIZE, std::vector<float>(CELLSIZE, 0.0f));
 
   // start the DEM file
@@ -104,15 +120,22 @@ int main(int argc, char *argv[])
   {
     for (int j = 0; j < CELLSIZE; j++)
     {
+      // // get height from simplex noise
       // float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
-      // Seed the random number generator
-      srand(time(nullptr));
-      // Generate a random float around 10
+      // // Seed the random number generator
+      // srand(time(nullptr));
+      // // Generate a random float around 10
       //float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
     
+      // get height from value noise
       float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
+      // // get height from perlin noise
+      // float height = g_pDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+      // // increase the height 
+      // heights[i][j] = abs(height) * 30.0f;
+      
       // increase the height to a random times (about 40)
       heights[i][j] = height;
       // printf("%f/", pow(height, rn));
