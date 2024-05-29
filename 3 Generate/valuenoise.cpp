@@ -83,26 +83,22 @@ float CDesignerWorld::GetHeight(float x, float z, float a, float b, int n)
   float result = 0.0f; // resulting height
   float scale = 1.0f;  // scale of next octave
 
-  for (int i = 0; i < n; i++)
-  { // for each octave
+  
+  for(int i=0; i<n; i++){ //for each octave 
+    float n = noise(x,z);
+   // printf("%f", n);
     result += scale * noise(x, z);
-    float norm_noise = (1.0f + noise(x, z)) / 2.0f;
-    result += scale * norm_noise;
-    // result += scale * noise(x, z);
-    scale *= a; // scale down amplitude of next octave
-    x *= b;
-    z *= b; // scale down wavelength of next octave
-  } // for
+    scale *= a; //scale down amplitude of next octave
+    x *= b; z *= b; //scale down wavelength of next octave
+  } //for
 
-  // return (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) / 2.0f; // scale to [0.0, 1.0]
-  // printf("%f      ",a);
-  // printf("%f",result);
-  float normalizedResult = (result * 1.414213f * (a - 1.0f) / (scale - 1.0f));
+  //float normalizedResult = (result * 1.414213f * (a - 1.0f) / (scale - 1.0f));
   // float height = min_height + normalizedResult * (max_height - min_height);
   float height = (1.0f + result * 1.414213f * (a - 1.0f) / (scale - 1.0f)) / 2.0f;
   // printf("%f", normalizedResult);
 
-  return height / ALTITUDE; // scale to [0.0, 1.0]
+
+  return (1.0f + result * 1.414213f * (a - 1.0f)/(scale - 1.0f))/2.0f; //scale to [0.0, 1.0]// scale to [0.0, 1.0]
 } // GetHeight
 
 /// Get random height value for a single octave at a point in the terrain.
