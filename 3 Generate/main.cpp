@@ -38,8 +38,8 @@ typedef std::vector<std::vector<float>> HeightMatrix;
 
 // Height distribution data.
 const float min_elevation = 0.0f;
-const float max_elevation = 500.0f;
-const bool scaled = false;
+const float max_elevation = 25.0f;
+const bool scaled = true;
 //const int POINTCOUNT = 31;
 /*int g_nUtahDistribution[POINTCOUNT] = {
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1

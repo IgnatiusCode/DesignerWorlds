@@ -66,21 +66,21 @@ def generate_data(num_modes, centres, spreads, skews, kurtoses, weights=None, n_
 # Example usage
 distribution_params = {
     'num_modes': 2,         # Number of modes
-    'centres': [5, 20.0],    # Means or centres of the distributions
-    'spreads': [5.0, 5.0],      # Spreads or standard deviations of the distributions
+    'centres': [5, 50.0],    # Means or centres of the distributions
+    'spreads': [10.0, 50.0],      # Spreads or standard deviations of the distributions
     'skews': [0.0, 0.0],        # Skewnesses of the distributions
     'kurtoses': [0.0, 0.0],     # Kurtoses of the distributions
-    'weights': [50.0, 50.0],   # Weights of the distributions
+    'weights': [30.0, 70.0],   # Weights of the distributions
 }
 
-distribution_params = {
+""" distribution_params = {
     'num_modes': 1,         # Number of modes
     'centres': [2.0],    # Means or centres of the distributions
     'spreads': [20.0],      # Spreads or standard deviations of the distributions
     'skews': [5.0],        # Skewnesses of the distributions
     'kurtoses': [0.0],     # Kurtoses of the distributions
     'weights': [100.0],   # Weights of the distributions
-}
+} """
 
 data = generate_data(**distribution_params, n_samples=50, data_range=(0, 256))
 print(data)
