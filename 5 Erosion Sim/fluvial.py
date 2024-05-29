@@ -171,10 +171,9 @@ def remove_lakes(mask):
   new_mask[labels != labels[0, 0]] = True
   return new_mask
 
-
 def main(argv):
   dim = 512
-  shape = (dim,) * 2
+  # shape = (dim,) * 2
   disc_radius = 1.0
   max_delta = 0.05
   river_downcutting_constant = 1.3
@@ -182,27 +181,41 @@ def main(argv):
   default_water_level = 1.0
   evaporation_rate = 0.2
 
-  # # load asc file and get matrix
-  # matrix, _ = load_dem.load_asc_file("105705609.asc")
-  # # change to loaded shape
-  # shape = matrix.shape
+  # load asc file and get matrix
+  terrain_matrix, _ = load_dem.load_asc_file("106341437.asc")
+  # change to loaded shape
+  shape = terrain_matrix.shape
 
   print ('Generating...')
+  # pick up threshold
+  # threshold = np.random.uniform(np.min(terrain_matrix), np.max(terrain_matrix) * 0.9 + np.min(terrain_matrix) * 0.1) 
+  # threshold picked up manually
+  print(f"Chosen threshold: {400}")
+  land_mask = (terrain_matrix > 400)
+  land_mask = remove_lakes(land_mask)
 
-  print('  ...initial terrain shape')
-  land_mask = remove_lakes(
-      (util.fbm(shape, -2, lower=2.0) + bump(shape, 0.2 * dim) - 1.1) > 0)
   coastal_dropoff = np.tanh(util.dist_to_mask(land_mask) / 80.0) * land_mask
-  mountain_shapes = util.fbm(shape, -2, lower=2.0, upper=np.inf)
-  initial_height = ( 
-      (util.gaussian_blur(np.maximum(mountain_shapes - 0.40, 0.0), sigma=5.0) 
-        + 0.1) * coastal_dropoff)
-  deltas = util.normalize(np.abs(util.gaussian_gradient(initial_height))) 
+  mountain_shapes = util.fbm(terrain_matrix.shape, -2, lower=2.0, upper=np.inf)
+  initial_height = (util.gaussian_blur(np.maximum(mountain_shapes - 0.40, 0.0), sigma=5.0) + 0.1) * coastal_dropoff
+  deltas = util.normalize(np.abs(util.gaussian_gradient(initial_height)))
+
+
+  # =================================================origin============================================================
+  # print('  ...initial terrain shape')
+  # Create the land mask
+  # land_mask = remove_lakes(
+  #     (util.fbm(shape, -2, lower=2.0) + bump(shape, 0.2 * dim) - 1.1) > 0)
+  # coastal_dropoff = np.tanh(util.dist_to_mask(land_mask) / 80.0) * land_mask
+  # mountain_shapes = util.fbm(shape, -2, lower=2.0, upper=np.inf)
+  # initial_height = ( 
+  #     (util.gaussian_blur(np.maximum(mountain_shapes - 0.40, 0.0), sigma=5.0) 
+  #       + 0.1) * coastal_dropoff)
+  # deltas = util.normalize(np.abs(util.gaussian_gradient(initial_height))) 
+  # ===================================================================================================================  
 
   print('  ...sampling points')
   points = util.poisson_disc_sampling(shape, disc_radius)
   coords = np.floor(points).astype(int)
-
 
   print('  ...delaunay triangulation')
   tri = sp.spatial.Delaunay(points)
@@ -225,9 +238,10 @@ def main(argv):
       max_delta, river_downcutting_constant)
   terrain_height = render_triangulation(shape, tri, new_height)
 
+  print(f'matrix:\n{terrain_matrix}, shape={terrain_matrix.shape}')
+  print(f'terrian height:\n{terrain_height}, shape={terrain_height.shape}')
 
-
-  np.savez('river_network', height=terrain_height, land_mask=land_mask)
+  np.savez('river_network_106576406', height=terrain_height, land_mask=land_mask)
 
 
 if __name__ == '__main__':

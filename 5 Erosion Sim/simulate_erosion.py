@@ -9,18 +9,21 @@ from landlab import RasterModelGrid
 from landlab.plot.imshow import imshow_grid
 
 # read npz
-# data = np.load('river_network_.npz')
-# terrian_heights, land_mask = data["height"], data["land_mask"]  # get terrian_heights
-# nrows, ncols = terrian_heights.shape  # nrows, ncols 
-# elevation = terrian_heights
-# cellsize = 5.0
+data = np.load('river_network_106576406.npz')
+terrian_heights, land_mask = data["height"], data["land_mask"]  # get terrian_heights
+nrows, ncols = terrian_heights.shape  # nrows, ncols 
+elevation = terrian_heights
+cellsize = 5.0
 
 types = ['valley', 'fluvial', 'sediment']
 
+# =================================================origin============================================================
 # Replace with your file path
-filename = r'C:\Users\jsmnz\OneDrive\Desktop\DesignerWorld4610\DesignerWorlds-1\5 Erosion Sim\106576406.asc'
-elevation, cellsize = load_dem.load_asc_file(filename)
-nrows, ncols = elevation.shape
+# filename = r'C:\Users\jsmnz\OneDrive\Desktop\DesignerWorld4610\DesignerWorlds-1\5 Erosion Sim\106576406.asc'
+# filename = r'106341437.asc'
+# elevation, cellsize = load_dem.load_asc_file(filename)
+# nrows, ncols = elevation.shape
+# ===================================================================================================================  
 valley = True
 plateau = False
 plateau_height = 10000
