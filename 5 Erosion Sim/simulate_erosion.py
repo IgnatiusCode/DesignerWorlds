@@ -79,5 +79,3 @@ dem_output_file = "elevation_dem.asc"
 load_dem.save_dem_as_ascii(elevation_grid, mg.dx, dem_output_file)
 
 print(f"DEM file saved as {dem_output_file}")
-
-

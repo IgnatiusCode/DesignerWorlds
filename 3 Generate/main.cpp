@@ -20,20 +20,29 @@
 #include <math.h>
 
 #include <algorithm>
+// value noise
 #include "valuenoise.cpp"
 #include "valuenoise.h"
 
+// simplex noise
 #include "Simplex.cpp"
 #include "Simplex.h"
+
+// perlin noise
+#include "Perlin.cpp"
+#include "Perlin.h"
 #pragma comment(lib, "Winmm.lib")
 
 // const int CELLSIZE = 512; //width of square grid
 // const int NUMOCTAVES = 8; //number of octaves of 1/f noise
 // const int ALTITUDE = 512; //altitude scale value
 
+// for value noise
 CDesignerWorld g_cDesignerWorld;
-// simplex noise
+// for simplex noise
 SDesignerWorld g_sDesignerWorld;
+// for perlin noise
+PDesignerWorld g_pDesignerWorld;
 typedef std::vector<std::vector<float>> HeightMatrix;
 
 // Height distribution data.
@@ -45,10 +54,15 @@ const bool scaled = true;
   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
 };*/
 
-const int POINTCOUNT = 28;
-int g_nUtahDistribution[POINTCOUNT] = {
-  104, 34, 22, 17, 15, 13, 10, 8, 6, 5, 4, 3, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
-};
+ const int POINTCOUNT = 32;
+ int g_nUtahDistribution[POINTCOUNT] = {
+   6, 8, 9, 2, 10, 6, 12, 0, 8, 10, 11, 11, 8, 10, 7, 11, 9, 5, 7, 11, 12, 9, 1, 6, 8, 8, 9, 7, 8, 5, 10, 12
+ };
+
+// const int POINTCOUNT = 31;
+// int g_nUtahDistribution[POINTCOUNT] = {
+//   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
+// };
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
@@ -74,11 +88,18 @@ int main(int argc, char *argv[])
   printf("Pseudorandom number seed = %d\n", seed);
 
   // set up designer world
-  // g_cDesignerWorld.Initialize();
-  // g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+  // // if use simplex noise
+  // g_sDesignerWorld.Initialize();
+  // g_sDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
 
+  // if use value noise
   g_cDesignerWorld.Initialize();
   g_cDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+
+  // // if use perlin noiser
+  // g_pDesignerWorld.Initialize();
+  // g_pDesignerWorld.SetValueTable(g_nUtahDistribution, POINTCOUNT);
+
   HeightMatrix heights(CELLSIZE, std::vector<float>(CELLSIZE, 0.0f));
 
   // start the DEM file
@@ -99,15 +120,22 @@ int main(int argc, char *argv[])
   {
     for (int j = 0; j < CELLSIZE; j++)
     {
+      // // get height from simplex noise
       // float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
-      // Seed the random number generator
-      srand(time(nullptr));
-      // Generate a random float around 10
+      // // Seed the random number generator
+      // srand(time(nullptr));
+      // // Generate a random float around 10
       //float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
     
+      // get height from value noise
       float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
 
+      // // get height from perlin noise
+      // float height = g_pDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+      // // increase the height 
+      // heights[i][j] = abs(height) * 30.0f;
+      
       // increase the height to a random times (about 40)
       heights[i][j] = height;
       // printf("%f/", pow(height, rn));

@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     printf("Scanning %s...\n", filename);
     float fSum = 0;
     for (int i = 0; i < nSize; i++) {
-        int nHt = image[i];
+        int nHt = image[i] * 2; // scaling factor of 100
         fSum += (float)nHt;
         nMinHt = std::min(nMinHt, nHt);
         nMaxHt = std::max(nMaxHt, nHt);
