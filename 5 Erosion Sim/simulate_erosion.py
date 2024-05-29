@@ -7,6 +7,7 @@ import matplotlib.colors as mcolors
 
 from landlab import RasterModelGrid
 from landlab.plot.imshow import imshow_grid
+from landlab.io.esri_ascii import write_esri_ascii
 
 # read npz
 data = np.load('river_network_106576406.npz')
@@ -33,7 +34,7 @@ fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 7))
 def initialise_model(nrows, ncols, elevation, cellsize):
     mg = RasterModelGrid((nrows, ncols), cellsize)
     z = mg.add_field('topographic__elevation', elevation.flatten(), at='node')
-    # plt.plot(mg.x_of_node, mg.y_of_node, '.')
+  
     imshow_grid(mg, 'topographic__elevation')
     axes[0].set_title('Initial Elevation')
     plt.show()
@@ -42,6 +43,7 @@ def initialise_model(nrows, ncols, elevation, cellsize):
 
 
 def get_valley(z, mg, grid_width, valley_width):
+    print('here')
 
     valley_min = np.random.uniform(0, grid_width - valley_width)
     valley_max = valley_min+valley_width
@@ -86,9 +88,10 @@ def get_erosion(z, mg, D=7, dt_coeff=0.3):
     plt.show()
 
 
-def save_to_ascii(mg, z, dem_output_file="elevation_dem.asc"):
+def save_to_ascii(mg,z):
     elevation_grid = mg.node_vector_to_raster(z)
-    dem_output_file = "elevation_dem.asc"
+    dem_output_file = "elevation_dem1.asc"
+    
 
 # Save the DEM
     load_dem.save_dem_as_ascii(elevation_grid, mg.dx, dem_output_file)
@@ -96,7 +99,7 @@ def save_to_ascii(mg, z, dem_output_file="elevation_dem.asc"):
     print(f"DEM file saved as {dem_output_file}")
 
 
-params = [[True, nrows, 200], [True, 7, 0.3], [False], [False]]
+params = [[True, nrows, 200], [True, 7, 0.1], [False], [False]]
 # main
 
 
@@ -110,7 +113,12 @@ def erode_terrain(params, nrows, ncols, elevation, cellsize):
     if params[3][0] == True:
         get_plateaus(z, mg, params[3][1])
 
+    imshow_grid(mg, 'topographic__elevation')
+    write_esri_ascii("test1.asc", mg) 
+    plt.show()
     save_to_ascii(mg, z)
 
 
 erode_terrain(params, nrows, ncols, elevation, cellsize)
+
+
