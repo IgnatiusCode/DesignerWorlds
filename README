@@ -1,6 +1,6 @@
 Designer Worlds
 
-  This GitHub repository contains supplementary material to accompany
+  This GitHub repository is based on 
   Ian Parberry, "Designer Worlds: Procedural Generation of Infinite Terrain from
   Real-World Elevation Data", Journal of Computer Graphics Techniques, Vol. 3,
   No. 1, pp. 74-85, 2014.
@@ -9,29 +9,18 @@ Designer Worlds
 
 ABSTRACT
 
-  The standard way to procedurally generate random terrain for video games
-  and other applications is to post-process the output of a fast noise
-  generator such as Perlin Noise. Tuning the post-processing to achieve
-  particular types of terrain requires game designers to be reasonably
-  well-trained in mathematics. A well-known variant of Perlin Noise called
-  <em>value noise</em> is used in a process accessible to designers trained
-  in geography to generate geotypical terrain based on elevation statistics
-  drawn from widely available sources such as the United States Geographical
-  Service. A step-by-step process for downloading and creating terrain from
-  real-world elevation data is described, and an implementation in C++ is given.
+  Procedural terrain generation is most commonly done by modeling fast noise textures such as Perlin
+and Simplex noise. These often require mathematical understanding and there is a missing link 
+between the types of terrain generated and the mathematical underpinnings required to find and tune
+ideal parameters, especially for terrain designers. Additionally, terrain generated using
+procedural noise functions is often unrealistically smooth and uniform. To solve this, we build 
+upon existing methods using Value noise by linking a dictionary of terrain descriptors to noise 
+parameters based on real-world height distributions and comparing different types of noise.
+Additionally, we model the real-world process of erosion to increase the realism of the terrain. 
+Our program provides a more robust framework to generate procedural terrain based on real-world 
+data and links physical terrain descriptions to procedurally generated noise textures with 
+increased resemblance to terrain formed by real-world processes.
 
-LICENSE
-
-  The source code in this repository is made available under the following license.
-
-  // Copyright Ian Parberry, (date).<br>
-  //<br>
-  // This file is made available under the GNU All-Permissive License.<br>
-  //<br>
-  // Copying and distribution of this file, with or without modification,<br>
-  // are permitted in any medium without royalty provided the copyright<br>
-  // notice and this notice are preserved.  This file is offered as-is,<br>
-  // without any warranty.<br>
 
 CONTENTS
   
@@ -39,37 +28,46 @@ CONTENTS
   2. Analyze
   3. Generate
   4. View
+  5. Erosion Sim
+  6. Gen Distribution
 
-1. Data
-
-  According to the paper, this folder is supposed to contain a DEM file
-  12SVH200800.asc and an image file mountain2.png of the area that it covers.
-  The image file is here, but the DEM file exceeds GitHub's size limit. Instead,
-  12SVH200800.asc contains a link to a place from which you can download the
-  actual file from the UAGRC.
-  
-
-2. Analyze
-
-  This folder contains a Visual Studio 2012 Solution and C++ source code that,
-  when compiled and executed, reads 12SVH200800.asc and outputs two text files,
-  output.txt which contains data for a histogram, and code.txt which contains a
-  code snippet to be added to the Designer Worlds generator. There is also an Excel
-  spreadsheet data.xlsx containing a histogram drawn from the data in output.txt.
+Sections 1-2 are mostly unmodified from Parberry's method and were only used to observe histogram distributions
+of different types of landscapes. We have added a method to create distributions from gray images rather
+than DEM files.
 
 3. Generate
 
   This folder contains a Visual Studio 2012 Solution and C++ source code
-  for the Designer Worlds Generator. The code from code.txt in the Analyze
-  folder has been pasted into the appropriate place in main.cpp. Each time this
-  code is executed it will output a DEM file for a piece of random terrain similar
-  to the original DEM file. It is also supposed to contain a generated DEM file
-  1293054609.asc, but once again we hit the GitHub size limit, so you'll have
-  to generate it yourself.
+  for the base terrain Generator. It contains methods to generate terrain based
+  on different types of noise (simplex, perlin, and value noise). The respective classes 
+  are g_sDesignerWorld, g_pDesignerWorld and g_cDesignerWorld. The default method is using
+  value noise.The max and minimum height can be set to scale the terrain. Rather than using 
+  the distribution generated using section 2, we use the distributions in section 6, 
+  terrain_distributions.txt. 
+  The parameters frequency, lacunarity, and ocataves are represented by a, b and NUMOCTAVES and
+  are used as inputs into the GetHeight method. When this code is run, it will output a randomly 
+  generated .asc file using the specified parameters.
 
 4. View
 
-  Contents: A Terragen 3 Project File 1293054609.tgd for the terrain described by
-  1293054609.asc from the Generator, and an image file 1293054609.jpg generated by
-  running Terragen 3 on that Project file. Terragen 3 is available from
-  http://planetside.co.uk/products/terragen3.
+  This contains the basis .tgd file containing texture information that we use to visualise the 
+  results in Terragen 4.
+
+5. Erosion Sim
+
+  This folder contains python source code to apply erosion post-processing effects. It uses a list
+  of params to apply erosion effects. The parameters unique to each terrain type are similarly 
+  found in section 6, terrain_distributions.txt. When simulate_erosion is run with a correct input
+  ASCII file as generated in section 3, it will display a 2D height map of the before and after
+  erosion applications and output the corresponding ASCII file. For fluvial erosion, the river network 
+  must be generated separately by running with the correct ASCII file from section 3 in fluvial.py. The
+  height map is then stored to an .npz file and can be used as an input to sediment_erosion.py to apply other
+  erosion effects.
+
+6. Gen Distribution
+
+  This folder contains python source code and text files to describe the parameters for each terrain type. 
+  Histogram visualisions are also included. Running generate_distribution will output a list of 32 numbers
+  sampled according to the distribution given for each terrain type. Running text_to_distribution will write
+  the parameter summary for the distribution, value noise, and erosion simulation to the terrain_distributions.txt
+ file.
