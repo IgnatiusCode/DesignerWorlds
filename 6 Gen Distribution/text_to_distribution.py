@@ -49,6 +49,7 @@ class Terrain(Enum):
     ISLANDS = 5
     PLATEUS = 6
     ARCHIPELAGO = 7
+    ERODED_HILLS = 8
 
 class Params:
     def __init__(self, terrain: Terrain):
@@ -64,7 +65,8 @@ class Params:
             Terrain.JAG_MOUNTAIN: (25, 5, 1.0),
             Terrain.ISLANDS: (1, 5, 0.7, 25, 10, 0.3),
             Terrain.PLATEUS: (25, 2, 1.0),
-            Terrain.ARCHIPELAGO: (5, 5, 0.6, 25, 10, 0.4)
+            Terrain.ARCHIPELAGO: (5, 5, 0.6, 25, 10, 0.4),
+            Terrain.ERODED_HILLS: (16, 8, 1.0)
         }
         return distribution_params.get(self.terrain)
 
@@ -76,7 +78,8 @@ class Params:
             Terrain.JAG_MOUNTAIN: (2.0, 2.5, 10, 150, 350),    # Highest frequency, highest lacunarity
             Terrain.ISLANDS: (1.0, 2.0, 6, 0, 150),          # Medium frequency, medium lacunarity
             Terrain.PLATEUS: (1.5, 2.0, 4, 150, 300),          # Higher frequency, medium lacunarity
-            Terrain.ARCHIPELAGO: (1.0, 2.0, 6, 0, 150)       # Medium frequency, medium lacunarity
+            Terrain.ARCHIPELAGO: (1.0, 2.0, 6, 0, 150),       # Medium frequency, medium lacunarity
+            Terrain.ERODED_HILLS: (1.0, 2.0, 6, 80, 150)    # Medium frequency, medium lacunarity
         }
         return noise_params.get(self.terrain)
 
@@ -84,11 +87,12 @@ class Params:
         erosion_params = {
             Terrain.PLAINS: (False, True, False, False),           
             Terrain.HILLY: (True, True, True, False),            
-            Terrain.SMOOTH_MOUNTAIN: (True, True, True, False),  
-            Terrain.JAG_MOUNTAIN: (True, True, True, False),    
-            Terrain.ISLANDS: (False, True, True, False),          
+            Terrain.SMOOTH_MOUNTAIN: (True, True, False, False),  
+            Terrain.JAG_MOUNTAIN: (True, True, False, False),    
+            Terrain.ISLANDS: (False, True, False, False),          
             Terrain.PLATEUS: (False, False, False, True),         
-            Terrain.ARCHIPELAGO: (False, False, True, False)       
+            Terrain.ARCHIPELAGO: (False, False, True, False),    
+            Terrain.ERODED_HILLS: (False, True, True, False)    
         }
         return erosion_params.get(self.terrain)
 
@@ -125,7 +129,7 @@ def write_distribution_to_file(filename, terrain_type, distribution, noise_param
 
 # Example usage
 if __name__ == "__main__":
-    terrains = [Terrain.PLAINS, Terrain.HILLY, Terrain.SMOOTH_MOUNTAIN, Terrain.JAG_MOUNTAIN, Terrain.ISLANDS, Terrain.PLATEUS, Terrain.ARCHIPELAGO]
+    terrains = [Terrain.PLAINS, Terrain.HILLY, Terrain.SMOOTH_MOUNTAIN, Terrain.JAG_MOUNTAIN, Terrain.ISLANDS, Terrain.PLATEUS, Terrain.ARCHIPELAGO, Terrain.ERODED_HILLS]
     current_dir = os.path.dirname(__file__)
     output_file = os.path.join(current_dir, 'terrain_distributions.txt')
     open(output_file, 'w').close()
