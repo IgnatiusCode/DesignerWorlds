@@ -73,13 +73,13 @@ class Params:
     def _get_noise_params(self):
         noise_params = {
             Terrain.PLAINS: (0.5, 2.0, 4, 10, 80),           # Low frequency, low lacunarity
-            Terrain.HILLY: (1.0, 2.0, 6, 80, 150),            # Medium frequency, medium lacunarity
-            Terrain.SMOOTH_MOUNTAIN: (1.5, 2.0, 8, 150, 300),  # Higher frequency, higher lacunarity
-            Terrain.JAG_MOUNTAIN: (2.0, 2.5, 10, 150, 350),    # Highest frequency, highest lacunarity
-            Terrain.ISLANDS: (1.0, 2.0, 6, 0, 150),          # Medium frequency, medium lacunarity
-            Terrain.PLATEUS: (1.5, 2.0, 4, 150, 300),          # Higher frequency, medium lacunarity
-            Terrain.ARCHIPELAGO: (1.0, 2.0, 6, 0, 150),       # Medium frequency, medium lacunarity
-            Terrain.ERODED_HILLS: (1.0, 2.0, 6, 80, 150)    # Medium frequency, medium lacunarity
+            Terrain.HILLY: (0.6, 2.0, 6, 80, 150),            # Medium frequency, medium lacunarity
+            Terrain.SMOOTH_MOUNTAIN: (0.75, 2.0, 8, 150, 300),  # Higher frequency, higher lacunarity
+            Terrain.JAG_MOUNTAIN: (0.8, 2.5, 10, 150, 350),    # Highest frequency, highest lacunarity
+            Terrain.ISLANDS: (0.6, 2.0, 6, 0, 150),          # Medium frequency, medium lacunarity
+            Terrain.PLATEUS: (0.6, 2.0, 4, 150, 300),          # Higher frequency, medium lacunarity
+            Terrain.ARCHIPELAGO: (0.6, 2.0, 6, 0, 150),       # Medium frequency, medium lacunarity
+            Terrain.ERODED_HILLS: (0.5, 2.0, 6, 80, 150)    # Medium frequency, medium lacunarity
         }
         return noise_params.get(self.terrain)
 

@@ -49,20 +49,13 @@ typedef std::vector<std::vector<float>> HeightMatrix;
 const float min_elevation = 0.0f;
 const float max_elevation = 25.0f;
 const bool scaled = true;
-//const int POINTCOUNT = 31;
-/*int g_nUtahDistribution[POINTCOUNT] = {
-  1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
-};*/
 
+// Change this to the relevant output of the text file terain_distributions.txt
 const int POINTCOUNT = 32;
 int g_nUtahDistribution[POINTCOUNT] = {
   90, 18, 12, 13, 12, 6, 11, 9, 5, 2, 3, 5, 3, 3, 0, 1, 3, 5, 1, 1, 4, 4, 4, 4, 0, 2, 2, 3, 7, 3, 4, 16
 };
 
-// const int POINTCOUNT = 31;
-// int g_nUtahDistribution[POINTCOUNT] = {
-//   1, 4, 6, 7, 7, 8, 10, 11, 14, 30, 37, 30, 19, 11, 8, 5, 5, 4, 3, 3, 3, 3, 3, 3, 5, 4, 4, 3, 2, 2, 1
-// };
 
 /// Print the header for a DEM file.
 /// \param output Output file handle.
