@@ -46,17 +46,15 @@ PDesignerWorld g_pDesignerWorld;
 typedef std::vector<std::vector<float>> HeightMatrix;
 
 // Height distribution data.
-const float min_elevation = 0.0f;
-const float max_elevation = 25.0f;
+const float min_elevation = 0;
+const float max_elevation = 25;
 const bool scaled = true;
 
 // Change this to the relevant output of the text file terain_distributions.txt
 const int POINTCOUNT = 32;
 int g_nUtahDistribution[POINTCOUNT] = {
-  90, 18, 12, 13, 12, 6, 11, 9, 5, 2, 3, 5, 3, 3, 0, 1, 3, 5, 1, 1, 4, 4, 4, 4, 0, 2, 2, 3, 7, 3, 4, 16
+  12, 4, 4, 4, 8, 5, 5, 3, 1, 11, 10, 8, 13, 12, 10, 12, 17, 20, 12, 10, 15, 7, 5, 11, 6, 3, 6, 1, 5, 8, 1, 7
 };
-
-
 /// Print the header for a DEM file.
 /// \param output Output file handle.
 
@@ -121,8 +119,9 @@ int main(int argc, char *argv[])
       // // Generate a random float around 10
       //float randomNumber = 40.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2.0f)) - 1.0f;
     
-      // get height from value noise
-      float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);
+      // get height from value noise here
+      // Update this, folliwng format (leave alone, leave alone, frequency, Lacunarity, Octaves)
+      float height = g_cDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, 6);
 
       // // get height from perlin noise
       // float height = g_pDesignerWorld.GetHeight(x + i / 256.0f, z + j / 256.0f, 0.5f, 2.0f, NUMOCTAVES);

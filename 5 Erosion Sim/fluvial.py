@@ -204,7 +204,10 @@ def main(argv):
   evaporation_rate = 0.2
 
   # load asc file and get matrix
-  terrain_matrix, _ = load_dem.load_asc_file("106341437.asc")
+
+  # HERE
+  terrain_matrix, _ = load_dem.load_asc_file(r"C:\Users\YYY\Documents\UNI\FourthYear\COMP4610\FinalMajor\DesignerWorlds\5 Erosion Sim\69963421.asc")
+
   # change to loaded shape
   shape = terrain_matrix.shape
 
@@ -263,7 +266,8 @@ def main(argv):
   print(f'matrix:\n{terrain_matrix}, shape={terrain_matrix.shape}')
   print(f'terrian height:\n{terrain_height}, shape={terrain_height.shape}')
 
-  np.savez('river_network_106576406', height=terrain_height*4000, land_mask=land_mask)
+  #Change this too 
+  np.savez('river_network_hill', height=terrain_height*4000, land_mask=land_mask)
 
 
 if __name__ == '__main__':

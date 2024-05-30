@@ -10,7 +10,7 @@ from landlab.plot.imshow import imshow_grid
 from landlab.io.esri_ascii import write_esri_ascii
 
 # read npz
-data = np.load('river_network_106576406.npz')
+data = np.load(r'C:\Users\YYY\Documents\UNI\FourthYear\COMP4610\FinalMajor\DesignerWorlds\river_network_hill.npz')
 terrian_heights, land_mask = data["height"], data["land_mask"]  # get terrian_heights
 nrows, ncols = terrian_heights.shape  # nrows, ncols 
 elevation = terrian_heights
@@ -25,9 +25,10 @@ types = ['valley', 'fluvial', 'sediment']
 # elevation, cellsize = load_dem.load_asc_file(filename)
 # nrows, ncols = elevation.shape
 # ===================================================================================================================  
-valley = True
-plateau = False
-plateau_height = 10000
+#filename = r'C:\Users\YYY\Documents\UNI\FourthYear\COMP4610\FinalMajor\DesignerWorlds\5 Erosion Sim\68278484.asc'
+#elevation, cellsize = load_dem.load_asc_file(filename)
+#nrows, ncols = elevation.shape
+
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 7))
 
 
@@ -99,7 +100,8 @@ def save_to_ascii(mg,z):
     print(f"DEM file saved as {dem_output_file}")
 
 
-params = [[True, nrows, 200], [True, 7, 0.1], [False], [False]]
+params = [[False, nrows, 200], [True, 7, 0.1] , [True], [False, 115.0]]
+
 # main
 
 
